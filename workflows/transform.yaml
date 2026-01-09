@@ -1,0 +1,153 @@
+---
+name: transform
+description: Execute full K2M pipeline with 4 human-judgment checkpoints
+version: 1.0.0
+author: Rabbit
+module: conscious-founder
+
+# Workflow metadata
+metadata:
+  phase: main_execution
+  checkpoint: true
+  estimated_time: "20-30 minutes"
+  agents:
+    - k2m-analyst
+    - k2m-architect
+    - k2m-copywriter
+    - k2m-editor
+
+# Workflow configuration
+config:
+  load_emphasis: true
+  emphasis_path: "{output}/emphasis/latest-emphasis.md"
+  transcript_required: true
+
+# Workflow steps
+steps:
+  - id: transform_01
+    name: Load Emphasis (if available)
+    description: Load previously captured emphasis
+    type: system
+    handler: load_file
+
+    input:
+      type: file
+      path: "{output}/emphasis/latest-emphasis.md"
+      optional: true
+
+    action:
+      if_found: "Load and display emphasis"
+      if_not_found: "Continue without emphasis (user can provide at Checkpoint 1)"
+
+  - id: transform_02
+    name: Analyst Agent
+    description: Extract insights from transcript
+    type: agent
+    agent: k2m-analyst
+    command: AN
+
+    checkpoint:
+      id: checkpoint_1
+      name: Thesis & Direction
+      wait_for_user: true
+
+      prompt:
+        - "What's YOUR thesis from this content?"
+        - "Which insights resonated most with YOU?"
+        - "Who specifically should read this?"
+        - "What's your angle/connection to this?"
+        - "Any frameworks you're already seeing?"
+        - "What tone feels right for this piece?"
+
+    output:
+      path: "{output}/analysis/{timestamp}-analysis.md"
+
+  - id: transform_03
+    name: Architect Agent
+    description: Structure content using pattern selection
+    type: agent
+    agent: k2m-architect
+    command: AS
+
+    input:
+      - "{output}/analysis/{timestamp}-analysis.md"
+      - user_checkpoint_1_input
+
+    checkpoint:
+      id: checkpoint_2
+      name: Structure & Pattern Approval
+      wait_for_user: true
+
+      prompt:
+        - "Does this structure serve your thesis?"
+        - "Approve or modify the pattern selection"
+        - "Confirm or change the title"
+        - "Any structural adjustments?"
+
+    output:
+      path: "{output}/structure/{timestamp}-structure.md"
+
+  - id: transform_04
+    name: Copywriter Agent
+    description: Generate content with calibrated voice
+    type: agent
+    agent: k2m-copywriter
+    command: CW
+
+    input:
+      - "{output}/structure/{timestamp}-structure.md"
+      - user_checkpoint_2_input
+
+    output:
+      path: "{output}/drafts/{timestamp}-draft.md"
+
+  - id: transform_05
+    name: Editor Agent
+    description: Review content against quality gates
+    type: agent
+    agent: k2m-editor
+    command: ED
+
+    input:
+      - "{output}/drafts/{timestamp}-draft.md"
+
+    checkpoint:
+      id: checkpoint_4
+      name: Final Approval
+      wait_for_user: true
+
+      prompt:
+        - "Review against litmus test"
+        - "Approve for publish or request changes"
+        - "Final quality check"
+
+    output:
+      path: "{output}/published/{timestamp}-final.md"
+
+# Workflow completion
+completion:
+  success:
+    message: |
+      ✓ K2M Pipeline Complete!
+
+      **Outputs:**
+      - Analysis: {analysis_path}
+      - Structure: {structure_path}
+      - Draft: {draft_path}
+      - Final: {final_path}
+
+      **Next steps:**
+      - Publish your content
+      - Run /bmad:conscious-founder:return to re-enter later
+      - Run /bmad:conscious-founder:repurpose for social posts
+
+  error:
+    message: "Transform workflow failed. Check error logs."
+    retry: false
+
+# Checkpoint philosophy
+checkpoint_philosophy: |
+  YOUR insights + My pattern recognition + Your judgment + My execution = YOUR voice at scale
+
+  These checkpoints preserve human judgment at critical decision points.
+  The AI provides craft expertise; you provide creative direction.

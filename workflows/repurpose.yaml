@@ -1,0 +1,196 @@
+---
+name: repurpose
+description: Extract Type A/B/C social posts from published newsletters using ACM framework
+version: 1.0.0
+author: Rabbit
+module: conscious-founder
+
+# Workflow metadata
+metadata:
+  phase: post_publication
+  checkpoint: false
+  estimated_time: "3-5 minutes"
+  output_format: social_posts
+
+# Workflow configuration
+config:
+  source_content: "{output}/published/{latest}.md"
+  use_acm_framework: true
+  post_types:
+    - Type A: Direct content execution (Module 7: Exit)
+    - Type B: Framework exploration (Module 2: Expose)
+    - Type C: Paradox spotlight (Module 1: Destabilize)
+
+# Workflow steps
+steps:
+  - id: repurpose_01
+    name: Select Published Content
+    description: Choose which newsletter to repurpose
+    type: user_input
+    handler: selection
+
+    prompt: |
+      # Repurpose Workflow - Extract Social Posts
+
+      Select a published newsletter to repurpose into social posts.
+
+      ## Recent Publications
+      {published_list}
+
+      Selection (enter number or ID):
+
+    action:
+      type: load_content
+      path: "{output}/published/{selection}.md"
+
+  - id: repurpose_02
+    name: Extract Key Elements
+    description: Identify core insights, frameworks, and quotable moments
+    type: agent
+    agent: k2m-analyst
+    command: extract
+
+    input:
+      - "{selected_content}"
+      - knowledge: "{knowledge}/acm-framework.md"
+
+    output:
+      core_insights: []
+      frameworks_used: []
+      quotable_moments: []
+      tension_points: []
+
+  - id: repurpose_03
+    name: Generate Type A Posts
+    description: Direct content execution posts (Module 7: Exit)
+    type: agent
+    agent: k2m-copywriter
+    command: generate_type_a
+
+    input:
+      - extracted_elements
+      - framework: "Module 7: Exit - Clear action, specific next step"
+
+    output:
+      type: social_posts
+      count: 1-2
+      format: |
+        **Type A Post (Direct Execution)**
+        {post_content}
+
+        #newsletter #K2M
+
+    template: |
+      The post should:
+      - Deliver clear value
+      - Include specific action or insight
+      - Feel complete and actionable
+      - Use Module 7: Exit energy
+
+  - id: repurpose_04
+    name: Generate Type B Posts
+    description: Framework exploration posts (Module 2: Expose)
+    type: agent
+    agent: k2m-copywriter
+    command: generate_type_b
+
+    input:
+      - extracted_elements
+      - framework: "Module 2: Expose - Reveal hidden mechanism"
+
+    output:
+      type: social_posts
+      count: 1-2
+      format: |
+        **Type B Post (Framework Exploration)**
+        {post_content}
+
+        #newsletter #framework
+
+    template: |
+      The post should:
+      - Reveal a mental model or framework
+      - Show "behind the scenes" of thinking
+      - Make the invisible visible
+      - Use Module 2: Expose energy
+
+  - id: repurpose_05
+    name: Generate Type C Posts
+    description: Paradox spotlight posts (Module 1: Destabilize)
+    type: agent
+    agent: k2m-copywriter
+    command: generate_type_c
+
+    input:
+      - extracted_elements
+      - framework: "Module 1: Destabilize - Surface tension"
+
+    output:
+      type: social_posts
+      count: 1-2
+      format: |
+        **Type C Post (Paradox Spotlight)**
+        {post_content}
+
+        #newsletter #paradox
+
+    template: |
+      The post should:
+      - Surface a tension or paradox
+      - Challenge conventional thinking
+      - Create cognitive dissonance
+      - Use Module 1: Destabilize energy
+
+  - id: repurpose_06
+    name: Compile and Format
+    description: Assemble all posts into ready-to-publish format
+    type: system
+    handler: compile
+
+    output:
+      path: "{output}/social/{timestamp}-social-posts.md"
+      format: markdown
+
+    content: |
+      # Social Posts from: {source_title}
+      **Generated:** {timestamp}
+      **Source:** {source_link}
+
+      ## Type A: Direct Execution (Module 7)
+      {type_a_posts}
+
+      ## Type B: Framework Exploration (Module 2)
+      {type_b_posts}
+
+      ## Type C: Paradox Spotlight (Module 1)
+      {type_c_posts}
+
+      ---
+      **Total Posts:** {post_count}
+      **Ready to publish:** Yes ✓
+
+# Workflow completion
+completion:
+  success:
+    message: |
+      ✓ Social posts generated successfully!
+
+      **Posts created:** {post_count}
+      - Type A (Direct): {type_a_count}
+      - Type B (Framework): {type_b_count}
+      - Type C (Paradox): {type_c_count}
+
+      **Saved to:** {output_path}
+
+      Copy and paste directly to your social platforms.
+
+  error:
+    message: "Failed to generate social posts. Check source content."
+    retry: true
+
+# Quality gates
+quality_gates:
+  - Each post must stand alone
+  - Framework energy must be clear
+  - Value delivered in < 280 characters (Twitter) or < 2000 (LinkedIn)
+  - Link back to original newsletter included

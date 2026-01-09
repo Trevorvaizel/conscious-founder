@@ -1,0 +1,66 @@
+---
+name: conscious-founder
+version: 1.0.0
+display_name: Conscious-Founder Module
+description: |
+  BMAD module wrapping Rabbit's K2M newsletter workflow with zero semantic loss.
+  Converts standalone AI agent prompts into BMAD-compliant agents while preserving
+  every nuance of the original framework.
+
+author: Rabbit
+created: 2026-01-09
+updated: 2026-01-09
+license: MIT
+
+# Module metadata
+metadata:
+  category: creative_workflow
+  tags: [newsletter, content_creation, k2m, attention_control_mode]
+  language: English
+  status: production_ready
+
+# Dependencies
+dependencies:
+  bmad_core: ">=1.0.0"
+  bmad_bmm: ">=1.0.0"
+  bmad_bmb: ">=1.0.0"
+
+# Capabilities
+capabilities:
+  - Agent wrapping with zero semantic loss
+  - Structured workflow orchestration
+  - Knowledge base as single-source-of-truth
+  - Creative cartography (altitude engine)
+  - Node registry and territory mapping
+  - Session state persistence
+
+# Components
+components:
+  agents: 4
+  workflows: 4
+  knowledge_files: 8
+  installation_scripts: 3
+
+# Installation
+installation:
+  type: git_clone
+  setup_required: true
+  verification_script: verify-install.sh
+
+# Documentation
+documentation:
+  readme: README.md
+  conversion_guide: CONVERSION_GUIDE.md
+  testing_checklist: TESTING_CHECKLIST.md
+  tutorial: TUTORIAL.md
+  patterns: PATTERNS.md
+  troubleshooting: TROUBLESHOOTING.md
+
+# Support
+support:
+  type: reference_implementation
+  community: https://github.com/anthropics/bmad
+  documentation: https://docs.claude.com/bmad
+
+# Module manifest version
+manifest_version: 1.0

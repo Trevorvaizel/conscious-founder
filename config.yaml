@@ -1,0 +1,114 @@
+# Conscious-Founder Module Configuration
+# BMAD Module for K2M Newsletter Workflow
+# Version: 1.0.0
+# Author: Rabbit
+
+module:
+  name: conscious-founder
+  display_name: Conscious-Founder
+  version: 1.0.0
+  description: BMAD module wrapping K2M newsletter workflow with zero semantic loss
+  author: Rabbit
+  created: 2026-01-09
+  updated: 2026-01-09
+
+# Module paths (relative to project root)
+paths:
+  module_root: "{project-root}/_bmad/modules/conscious-founder"
+  agents: "{project-root}/_bmad/modules/conscious-founder/agents"
+  workflows: "{project-root}/_bmad/modules/conscious-founder/workflows"
+  knowledge: "{project-root}/_bmad/knowledge"
+  output: "{project-root}/_bmad-output/conscious-founder"
+
+# Agent configuration
+agents:
+  - id: k2m-analyst
+    name: Alex
+    title: K2M Content Analyst
+    icon: "🔍"
+    file: "analyst.md"
+    phase: 1
+    next: [k2m-architect]
+
+  - id: k2m-architect
+    name: "Sam"
+    title: K2M Content Architect
+    icon: "🏗️"
+    file: "architect.md"
+    phase: 2
+    next: [k2m-copywriter]
+
+  - id: k2m-copywriter
+    name: Casey
+    title: K2M Content Copywriter
+    icon: "✍️"
+    file: "copywriter.md"
+    phase: 3
+    next: [k2m-editor]
+
+  - id: k2m-editor
+    name: "Eve"
+    title: K2M Content Editor
+    icon: "✅"
+    file: "editor.md"
+    phase: 4
+    next: []
+
+# Workflow configuration
+workflows:
+  - id: inject
+    name: Inject
+    description: Capture emphasis/angle before boiling phase completes
+    file: "inject.yaml"
+
+  - id: transform
+    name: Transform
+    description: Execute full K2M pipeline with 4 checkpoints
+    file: "transform.yaml"
+
+  - id: return
+    name: Return
+    description: Re-enter published nodes with full context
+    file: "return.yaml"
+
+  - id: repurpose
+    name: Repurpose
+    description: Extract Type A/B/C social posts using ACM framework
+    file: "repurpose.yaml"
+
+# Knowledge base configuration
+knowledge:
+  base_path: "{project-root}/_bmad/knowledge"
+  files:
+    - acm-framework.md
+    - module-execution.md
+    - juggling-patterns.md
+    - voice-constants.md
+    - quality-gates.md
+    - pattern-selection.md
+    - checkpoint-philosophy.md
+    - cta-placement.md
+
+# Output configuration
+output:
+  base_path: "{project-root}/_bmad-output/conscious-founder"
+  directories:
+    - analysis
+    - structure
+    - drafts
+    - published
+    - emphasis
+    - nodes
+
+# Feature flags
+features:
+  altitude_engine: true
+  node_registry: true
+  territory_mapping: true
+  session_persistence: true
+
+# BMAD compatibility
+bmad:
+  minimum_version: "1.0.0"
+  tested_version: "6.0.0-alpha.22"
+  api_level: "stable"

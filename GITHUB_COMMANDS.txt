@@ -1,0 +1,21 @@
+# Commands to Push Your Module to GitHub
+
+# Step 1: Create the repository on GitHub first
+# Go to: https://github.com/new
+# Name: conscious-founder-bmad-module
+# Description: BMAD module wrapping K2M newsletter workflow with zero semantic loss
+# DO NOT initialize with README
+
+# Step 2: Replace YOUR_USERNAME below, then run these commands:
+
+git remote add origin https://github.com/YOUR_USERNAME/conscious-founder-bmad-module.git
+git push -u origin main
+
+# That's it! Your module is now on GitHub.
+
+# Step 3: Share it
+# Others install with:
+# cd _bmad/modules
+# git clone https://github.com/YOUR_USERNAME/conscious-founder-bmad-module.git
+# cd conscious-founder-bmad-module
+# ./setup.sh

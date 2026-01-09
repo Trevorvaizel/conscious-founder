@@ -1,0 +1,92 @@
+---
+name: inject
+description: Capture creative emphasis/angle before boiling phase completes
+version: 1.0.0
+author: Rabbit
+module: conscious-founder
+
+# Workflow metadata
+metadata:
+  phase: pre_execution
+  checkpoint: false
+  estimated_time: "30 seconds"
+
+# Workflow steps
+steps:
+  - id: inject_01
+    name: Capture Emphasis
+    description: User captures creative emphasis and angle
+    type: user_input
+    handler: conversational
+
+    # User interaction prompt
+    prompt: |
+      # Inject Workflow - Capture Your Creative Emphasis
+
+      Before the boiling phase completes, capture the specific angle, emphasis, or connection you want to pronounce.
+
+      ## What to Capture
+      - What's YOUR thesis from this content?
+      - What insight do YOU want to emphasize?
+      - What's your angle/connection to this?
+
+      ## Why Capture Now?
+      If you don't capture this NOW, before the boiling phase completes, you'll lose 80% of the nuance.
+
+      ## Your Emphasis
+      Type your emphasis below (be as specific as possible):
+
+    # Output storage
+    output:
+      type: file
+      path: "{output}/emphasis/{timestamp}-emphasis.md"
+      format: markdown
+
+    # Templates
+    templates:
+      output: |
+        # Creative Emphasis Capture
+        **Date:** {date}
+        **Time:** {time}
+        **Transcript:** {transcript_source}
+
+        ## Your Emphasis
+        {user_input}
+
+        ## Context Notes
+        - Captured before boiling phase completion
+        - Will flow into Transform workflow
+        - Timestamp: {timestamp}
+
+  - id: inject_02
+    name: Save Emphasis
+    description: Save emphasis to file for later use
+    type: system
+    handler: save_file
+
+    output:
+      type: file
+      path: "{output}/emphasis/{timestamp}-emphasis.md"
+      overwrite: false
+
+    completion:
+      message: |
+        ✓ Emphasis captured successfully!
+
+        Your emphasis has been saved and will flow into the Transform workflow when you're ready.
+
+        **Next steps:**
+        1. Let the boiling phase complete
+        2. Run: /bmad:conscious-founder:transform
+        3. Your emphasis will be automatically loaded
+
+# Workflow completion
+completion:
+  success:
+    message: "Emphasis captured. Saved to: {output_path}"
+    next_workflow: "transform"
+    next_prompt: "Run /bmad:conscious-founder:transform when boiling phase completes"
+
+  error:
+    message: "Failed to capture emphasis. Please try again."
+    retry: true

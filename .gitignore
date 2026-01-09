@@ -1,0 +1,42 @@
+# BMAD Module - Conscious-Founder
+# Git ignore file for BMAD modules
+
+# Output directories (don't commit user data)
+_bmad-output/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Python (if any)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+
+# Environment files
+.env
+.env.local
+
+# Backup files
+*.bak
+*.backup

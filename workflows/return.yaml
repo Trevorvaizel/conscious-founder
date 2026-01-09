@@ -1,0 +1,139 @@
+---
+name: return
+description: Re-enter published nodes with full context for deepening insights
+version: 1.0.0
+author: Rabbit
+module: conscious-founder
+
+# Workflow metadata
+metadata:
+  phase: post_publication
+  checkpoint: false
+  estimated_time: "2-5 minutes"
+
+# Workflow configuration
+config:
+  node_registry_path: "{output}/nodes"
+  full_context_required: true
+
+# Workflow steps
+steps:
+  - id: return_01
+    name: Select Node
+    description: User selects a published node to re-enter
+    type: user_input
+    handler: interactive_selection
+
+    prompt: |
+      # Return Workflow - Re-enter Published Content
+
+      Select a published newsletter to re-enter with full context.
+
+      ## Recent Nodes
+      {node_list}
+
+      ## Selection Options
+      1. Enter node number
+      2. Search by keyword
+      3. Filter by date range
+      4. List all nodes
+
+      Your selection:
+
+    action:
+      type: load_node
+      node_path: "{node_registry}/nodes/{node_id}.md"
+
+  - id: return_02
+    name: Display Full Context
+    description: Show complete context for the selected node
+    type: system
+    handler: display_context
+
+    output:
+      include:
+        - original_content
+        - acm_modules_used
+        - frameworks_deployed
+        - publication_date
+        - key_insights
+        - connections_to_other_nodes
+        - territory_context
+
+    display:
+      header: |
+        # Context for: {title}
+        **Published:** {publication_date}
+        **ACM Modules:** {acm_modules}
+        **Frameworks:** {frameworks}
+
+      sections:
+        - name: Original Content
+          content: "{original_content}"
+
+        - name: Analysis Insights
+          content: "{analysis_insights}"
+
+        - name: Structural Choices
+          content: "{structural_choices}"
+
+        - name: Connections
+          content: "{connections}"
+
+  - id: return_03
+    name: Deepen Insights
+    description: User adds new insights or connections
+    type: user_input
+    handler: conversational
+
+    prompt: |
+      # Deepen Your Insights
+
+      You now have full context for this piece. What would you like to add?
+
+      ## Options
+      1. **Add new insight** - Something you've realized since publishing
+      2. **Cross-pollinate** - Connect to current work
+      3. **Reframe** - See it from a new angle
+      4. **Extend** - Build on the framework
+      5. **Just explore** - Re-read and see what emerges
+
+      Your choice:
+
+    output:
+      type: file
+      path: "{output}/nodes/{node_id}-deepened-{timestamp}.md"
+      format: markdown
+
+  - id: return_04
+    name: Update Node Registry
+    description: Record new insights and connections
+    type: system
+    handler: update_registry
+
+    action:
+      update_fields:
+        - last_accessed: {timestamp}
+        - deepening_count: +1
+        - new_insights: {user_input}
+        - new_connections: {detected_connections}
+
+    completion:
+      message: |
+        ✓ Node deepened successfully!
+
+        **Updated:** {node_title}
+        **New insights added:** {insight_count}
+        **New connections found:** {connection_count}
+
+        These insights will inform future altitude analysis.
+
+# Workflow completion
+completion:
+  success:
+    message: "Node re-entry complete. Insights saved to: {output_path}"
+    next_action: "Continue exploring or return to current work"
+
+  error:
+    message: "Failed to re-enter node. Check node ID and try again."
+    retry: true
