@@ -8,7 +8,7 @@
 Thumbs.db
 
 # Backup directories
-*.backup.*/
+*..backup.*/
 *~
 
 # Editor files
@@ -16,3 +16,6 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Local resources and references
+k2m-newsletter foundation/
