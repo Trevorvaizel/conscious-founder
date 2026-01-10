@@ -309,12 +309,15 @@ All critical issues resolved through production testing across multiple projects
 - Database lock detection
 - Cross-platform validation
 
-### 🚧 Phase 3: Visual Cartography (v0.2.0-beta) - NEXT
+### 🚧 Phase 3: Visual Cartography & Freeform Mode (v0.2.0-beta) - NEXT
 - Interactive D3.js territory maps
 - Node graph visualization
 - Theme cluster rendering
 - Evolution timeline views
 - Visual cross-pollination links
+- **Freeform Mode:** Conversational cartography ("Take me to 10,000 feet on [topic]")
+- Multi-agent dialogue for territory discovery
+- Session state persistence across days/weeks
 
 ### 🔮 Phase 4: Advanced Features (v1.0.0) - FUTURE
 - Multi-user collaboration
