@@ -42,6 +42,14 @@ if [ -z "$1" ]; then
 fi
 
 COMMIT_MSG="$1"
+AUTO_YES=false
+
+# Check for -y or --yes flag
+for arg in "$@"; do
+    if [ "$arg" = "-y" ] || [ "$arg" = "--yes" ]; then
+        AUTO_YES=true
+    fi
+done
 
 ###############################################################################
 # VERIFY WE'RE IN THE RIGHT PLACE
@@ -62,10 +70,14 @@ if [ ! -f "$PROJECT_ROOT/.gitmodules" ]; then
     echo -e "${YELLOW}Warning: .gitmodules not found${NC}"
     echo "Are you sure this is a submodule setup?"
     echo ""
-    read -p "Continue anyway? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
+    if [ "$AUTO_YES" = true ]; then
+        echo -e "${GREEN}Auto-confirming (-y flag)${NC}"
+    else
+        read -p "Continue anyway? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
     fi
 fi
 
@@ -125,11 +137,16 @@ fi
 echo ""
 echo -e "${BLUE}Message:${NC} \"$COMMIT_MSG\""
 echo ""
-read -p "Commit these changes? (y/N): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${YELLOW}Cancelled${NC}"
-    exit 0
+
+if [ "$AUTO_YES" = true ]; then
+    echo -e "${GREEN}Auto-confirming (-y flag)${NC}"
+else
+    read -p "Commit these changes? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${YELLOW}Cancelled${NC}"
+        exit 0
+    fi
 fi
 echo ""
 
